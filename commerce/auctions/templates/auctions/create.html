@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ create_listing.as_table }}
+    </table>
+    <input type="Submit" value="Save">
+</form>
+
+    
+
+    
+
+{% endblock %}
