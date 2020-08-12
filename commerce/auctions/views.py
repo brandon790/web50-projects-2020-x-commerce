@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .forms import CreateListingForm
 
-from .models import User
+from .models import User, Listing, Bid, Comment
 
 
 def index(request):
@@ -67,7 +67,33 @@ def create(request):
     form = CreateListingForm(request.POST or None)
     if form.is_valid():
         form.save()
+        title = request.POST.get('title')
+        return HttpResponseRedirect((f"listing/{ title }"))
 
     return render(request, "auctions/create.html", {
-        'create_listing': CreateListingForm
+        'create_listing': CreateListingForm })
+
+def listing(request, title):
+        current_title = Listing.objects.filter(title=title).values('title')
+        for i in current_title:
+            current_title = i['title']
+        current_des = Listing.objects.filter(title=title).values('description')
+        for i in current_des:
+            current_des = i['description']
+        current_stbid = Listing.objects.filter(title=title).values('start_bid')
+        for i in current_stbid:
+            current_stbid = i['start_bid']
+        current_imgurl = Listing.objects.filter(title=title).values('image_url')
+        for i in current_imgurl:
+            current_imgurl = i['image_url']
+        current_cat = Listing.objects.filter(title=title).values('category')
+        for i in current_cat:
+            current_cat = i['category']
+
+        return render(request, "auctions/listing.html", {
+            "title": current_title,
+            "description": current_des,
+            "start_bid": current_stbid,
+            "img_url" : current_imgurl,
+            "cat": current_cat
         })
