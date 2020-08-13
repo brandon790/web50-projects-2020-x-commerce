@@ -1,12 +1,16 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>{{ title }}</h2>
+    <h2>Listing: {{ title }}</h2>
 
-    <ul>
-        {{ description }}
-        {{ start_bid }}
-        {{ img_url}}
-        {{ cat }}
-    </ul>
+
+        <img src="{{ img_url}}""><br>
+        <div>{{ description }}</div><br>
+        <h1>${{ start_bid }}</h1><br>
+        <h2>Details</h2>
+        <ul >
+            <li>Category: {{ cat }}</li>
+        </ul>
+       
+
 {% endblock %}

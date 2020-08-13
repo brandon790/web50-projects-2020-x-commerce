@@ -9,7 +9,11 @@ from .models import User, Listing, Bid, Comment
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listing = Listing.objects.all().values('title','description','start_bid', 'image_url','category')
+    print(listing)
+    return render(request, "auctions/index.html", {
+        "listing": listing,
+    })
 
 
 def login_view(request):
@@ -89,6 +93,7 @@ def listing(request, title):
         current_cat = Listing.objects.filter(title=title).values('category')
         for i in current_cat:
             current_cat = i['category']
+            
 
         return render(request, "auctions/listing.html", {
             "title": current_title,

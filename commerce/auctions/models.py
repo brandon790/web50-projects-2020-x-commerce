@@ -12,12 +12,12 @@ class Listing(models.Model):
     start_bid = models.DecimalField(max_digits=4, decimal_places=2)
     image_url = models.URLField(blank=True)
     cat_choice = (
-        ('F' , 'Fashion'),
-        ('T' , 'Toys'),
-        ('E' ,'Electronics'),
-        ('H' ,'Home'),
+        ('Fashion' , 'Fashion'),
+        ('Toys' , 'Toys'),
+        ('Electronics' ,'Electronics'),
+        ('Home' ,'Home'),
     )
-    category = models.CharField(max_length=10, choices=cat_choice, default='H')
+    category = models.CharField(max_length=12, choices=cat_choice, default='Home')
     def __str__(self):
         return f"{self.id}: {self.title}"
     
