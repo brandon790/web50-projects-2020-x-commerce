@@ -1,11 +1,11 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Fashion</h2>
 
     {% for item in listing %}
     <img src="{{ item.image_url }}"style="position:relative;left:200px;width:250px;height:250px;">
-    <a href="listing/{{item.title}}" style="position:relative;left:245px;top:-110px;font-weight: bolder;font-size: 20px;">{{ item.title }}</a>
+    <a href="/listing/{{item.title}}" style="position:relative;left:245px;top:-110px;font-weight: bolder;font-size: 20px;">{{ item.title }}</a>
     <div style="position:relative;left:500px;top:-220px">Price: S{{ item.start_bid }}</div>
     <div style="position:relative;left:500px;top:-200px">{{ item.description }}</div>
     

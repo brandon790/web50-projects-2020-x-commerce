@@ -10,7 +10,6 @@ from .models import User, Listing, Bid, Comment
 
 def index(request):
     listing = Listing.objects.all().values('title','description','start_bid', 'image_url','category')
-    print(listing)
     return render(request, "auctions/index.html", {
         "listing": listing,
     })
@@ -102,3 +101,28 @@ def listing(request, title):
             "img_url" : current_imgurl,
             "cat": current_cat
         })
+def categories(request):
+    return render(request, "auctions/categories.html")
+
+def fashion(request):
+    listing = Listing.objects.filter(category='Fashion')
+    return render(request, "auctions/fashion.html", {
+            "listing": listing,
+    })   
+
+def toys(request):
+    listing = Listing.objects.filter(category='Toys')
+    return render(request, "auctions/toys.html", {
+            "listing": listing,
+    })    
+
+def electronics(request):
+    listing = Listing.objects.filter(category='Electronics')
+    return render(request, "auctions/electronics.html", {
+            "listing": listing,
+    })
+def home(request):
+    listing = Listing.objects.filter(category='Home')
+    return render(request, "auctions/home.html", {
+            "listing": listing,
+    })
