@@ -2,8 +2,19 @@
 
 {% block body %}
     <h2>Listing: {{ title }}</h2><br>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% if user.is_authenticated %}
+            {% if add_watch == True %}
+            <input type="submit" value='Add to Watchlist' style="position: relative;left: 20px;"></button>
+            {% endif %}
+            {% if add_watch == False %}
+            <input type="submit" value='Remove from Watchlist' style="position: relative;left: 20px;"></button>
+            <input type="hidden" name="removewatch" value="yes">
+            {% endif %}
+            {% endif %}
 
-
+        </form><br>
         <img src="{{ img_url}}" style="position:relative;left:10px;width:250px;height:250px;"><br><br>
         <div>{{ description }}</div><br>
         <h1>${{ start_bid }}</h1><br>
