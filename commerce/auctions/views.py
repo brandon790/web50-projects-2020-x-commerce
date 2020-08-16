@@ -7,7 +7,7 @@ from .forms import CreateListingForm
 from django.contrib.auth.decorators import login_required
 
 
-from .models import User, Listing, Bid, Comment
+from .models import User, Listing, Bid, Comment, Category
 
 
 def index(request):
