@@ -13,7 +13,9 @@ urlpatterns = [
     path("categories/fashion", views.fashion, name="fashion"),
     path("categories/toys", views.toys, name="toys"),
     path("categories/electronics", views.electronics, name="electronics"),
-    path("categories/home", views.home, name="home")
+    path("categories/home", views.home, name="home"),
+    path("watchlist", views.watchlist, name="watchlist")
+
 
 
 

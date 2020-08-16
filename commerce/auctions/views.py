@@ -7,7 +7,7 @@ from .forms import CreateListingForm
 from django.contrib.auth.decorators import login_required
 
 
-from .models import User, Listing, Bid, Comment, Category
+from .models import User, Listing, Bid, Comment, Watchlist
 
 
 def index(request):
@@ -79,8 +79,12 @@ def create(request):
         'create_listing': CreateListingForm })
 
 def listing(request, title):
+    ##will get the specific bids on the listing
+    ##current_bids =(Bid.objects.filter(listing__title=title)).values('bid')
 
-
+    current_id = Listing.objects.filter(title=title).values('id')
+    for i in current_id:
+        current_id = i['id']
     current_title = Listing.objects.filter(title=title).values('title')
     for i in current_title:
         current_title = i['title']
@@ -96,15 +100,38 @@ def listing(request, title):
         current_cat = Listing.objects.filter(title=title).values('category')
     for i in current_cat:
         current_cat = i['category']
-        
- 
+    
+    watchlist = (Watchlist.objects.filter(user__username=request.user))
+    users_watchlist = []
+    for i in watchlist:
+        users_watchlist.append(i.watchlist)
+    add_watch = None
+    if current_id in users_watchlist:
+        add_watch = True
+    else:
+        add_watch = False
+
+    if request.method == "POST":
+        if request.POST.get('addwatch') == 'yes':
+            c = Watchlist(user=request.user, watchlist=current_id)
+            c.save()
+            return HttpResponseRedirect((f"{ title }"))
+        elif request.POST.get('removewatch') == 'yes':
+            c = Watchlist.objects.filter(watchlist=current_id)
+            c.delete()
+            return HttpResponseRedirect((f"{ title }"))
+
+
+
     return render(request, "auctions/listing.html", {
         "title": current_title,
         "description": current_des,
         "start_bid": current_stbid,
         "img_url" : current_imgurl,
         "cat": current_cat,
+        "add_watch": add_watch
         })
+    
 
 
 
@@ -133,4 +160,15 @@ def home(request):
     listing = Listing.objects.filter(category='Home')
     return render(request, "auctions/home.html", {
             "listing": listing,
+    })
+
+def watchlist(request):
+    watchlist = (Watchlist.objects.filter(user__username=request.user))
+    users_watchlist = []
+    for i in watchlist:
+        users_watchlist.append(i.watchlist)
+
+    listing = Listing.objects.filter(id__in=users_watchlist)
+    return render(request, "auctions/watchlist.html", {
+        "listing": listing,
     })

@@ -6,11 +6,12 @@
             {% csrf_token %}
             {% if user.is_authenticated %}
             {% if add_watch == True %}
-            <input type="submit" value='Add to Watchlist' style="position: relative;left: 20px;"></button>
-            {% endif %}
-            {% if add_watch == False %}
             <input type="submit" value='Remove from Watchlist' style="position: relative;left: 20px;"></button>
             <input type="hidden" name="removewatch" value="yes">
+            {% endif %}
+            {% if add_watch == False %}
+            <input type="submit" value='Add to Watchlist' style="position: relative;left: 20px;"></button>
+            <input type="hidden" name="addwatch" value="yes">
             {% endif %}
             {% endif %}
 
