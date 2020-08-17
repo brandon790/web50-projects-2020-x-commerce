@@ -100,7 +100,7 @@ def listing(request, title):
         current_cat = Listing.objects.filter(title=title).values('category')
     for i in current_cat:
         current_cat = i['category']
-    
+    ##watchlist
     watchlist = (Watchlist.objects.filter(user__username=request.user))
     users_watchlist = []
     for i in watchlist:
@@ -110,9 +110,14 @@ def listing(request, title):
         add_watch = True
     else:
         add_watch = False
-
+##bidding
+##need to validate bid
     if request.method == "POST":
-        if request.POST.get('addwatch') == 'yes':
+        if request.POST.get('bid') != '':
+            b = Bid(listing_id=current_id, bid=request.POST.get('bid'))
+            b.save()  
+            return HttpResponseRedirect((f"{ title }"))
+        elif request.POST.get('addwatch') == 'yes':
             c = Watchlist(user=request.user, watchlist=current_id)
             c.save()
             return HttpResponseRedirect((f"{ title }"))
@@ -120,8 +125,7 @@ def listing(request, title):
             c = Watchlist.objects.filter(watchlist=current_id)
             c.delete()
             return HttpResponseRedirect((f"{ title }"))
-
-
+            
 
     return render(request, "auctions/listing.html", {
         "title": current_title,

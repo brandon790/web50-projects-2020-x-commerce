@@ -13,16 +13,17 @@
             <input type="submit" value='Add to Watchlist' style="position: relative;left: 20px;"></button>
             <input type="hidden" name="addwatch" value="yes">
             {% endif %}
-            {% endif %}
-
-        </form><br>
+        <br>
         <img src="{{ img_url}}" style="position:relative;left:10px;width:250px;height:250px;"><br><br>
         <div>{{ description }}</div><br>
-        <h1>${{ start_bid }}</h1><br>
+        <h1>Starting Bid: ${{ start_bid }}</h1><br>
+        <input type="number" name='bid'>
+        <input type="submit" value='Place bid' value=bid>
         <h2>Details</h2>
         <ul >
             <li>Category: {{ cat }}</li>
         </ul>
        
-
+        {% endif %}
+    </form>
 {% endblock %}

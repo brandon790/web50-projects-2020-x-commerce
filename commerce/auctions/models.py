@@ -29,8 +29,8 @@ class Listing(models.Model):
 
 
 class Bid(models.Model):
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='bids',)
-    bid = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='bids')
+    bid = models.IntegerField(max_length=20)
 
 
     def __str__(self):
