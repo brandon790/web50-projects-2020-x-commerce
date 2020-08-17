@@ -14,7 +14,9 @@ urlpatterns = [
     path("categories/toys", views.toys, name="toys"),
     path("categories/electronics", views.electronics, name="electronics"),
     path("categories/home", views.home, name="home"),
-    path("watchlist", views.watchlist, name="watchlist")
+    path("watchlist", views.watchlist, name="watchlist"),
+    path("bidinvalid", views.bidinvalid, name="bidinvalid"),
+
 
 
 

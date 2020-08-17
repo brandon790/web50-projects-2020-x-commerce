@@ -79,8 +79,6 @@ def create(request):
         'create_listing': CreateListingForm })
 
 def listing(request, title):
-    ##will get the specific bids on the listing
-    ##current_bids =(Bid.objects.filter(listing__title=title)).values('bid')
 
     current_id = Listing.objects.filter(title=title).values('id')
     for i in current_id:
@@ -110,13 +108,22 @@ def listing(request, title):
         add_watch = True
     else:
         add_watch = False
-##bidding
-##need to validate bid
+    ##bidding
+
+    current_bids =(Bid.objects.filter(listing__title=title)).values('bid')
+    all_bids = [0]
+    for i in current_bids:
+        all_bids.append(i['bid'])
+    
+
     if request.method == "POST":
         if request.POST.get('bid') != '':
-            b = Bid(listing_id=current_id, bid=request.POST.get('bid'))
-            b.save()  
-            return HttpResponseRedirect((f"{ title }"))
+            if int(request.POST.get('bid')) > max(all_bids) and int(request.POST.get('bid')) >= current_stbid:
+                b = Bid(listing_id=current_id, bid=request.POST.get('bid'))
+                b.save()  
+                return HttpResponseRedirect((f"{ title }"))
+            else:
+                return render(request, "auctions/bidinvalid.html")
         elif request.POST.get('addwatch') == 'yes':
             c = Watchlist(user=request.user, watchlist=current_id)
             c.save()
@@ -125,7 +132,9 @@ def listing(request, title):
             c = Watchlist.objects.filter(watchlist=current_id)
             c.delete()
             return HttpResponseRedirect((f"{ title }"))
-            
+        ##determines winner
+         
+          
 
     return render(request, "auctions/listing.html", {
         "title": current_title,
@@ -135,7 +144,12 @@ def listing(request, title):
         "cat": current_cat,
         "add_watch": add_watch
         })
-    
+
+
+def bidinvalid(request):
+        return render(request, "auctions/bidinvalid.html")
+
+
 
 
 
