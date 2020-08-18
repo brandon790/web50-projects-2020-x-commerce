@@ -11,7 +11,7 @@ from .models import User, Listing, Bid, Comment, Watchlist
 
 
 def index(request):
-    listing = Listing.objects.all().values('title','description','start_bid', 'image_url','category')
+    listing = Listing.objects.filter(active=True).values('title','description','start_bid', 'image_url','category')
     return render(request, "auctions/index.html", {
         "listing": listing,
     })
@@ -80,6 +80,9 @@ def create(request):
 
 def listing(request, title):
 
+    current_active = Listing.objects.filter(title=title).values('active')
+    for i in current_active:
+        current_active = i['active']
     current_id = Listing.objects.filter(title=title).values('id')
     for i in current_id:
         current_id = i['id']
@@ -116,10 +119,33 @@ def listing(request, title):
         all_bids.append(i['bid'])
     
 
+        ##determines winner
+    created_by_query = Listing.objects.filter(title=title).values('created_by')
+    for i in created_by_query:
+        created_by = i['created_by']  
+
+    logged_in_id = (request.user.id)
+
+    if logged_in_id == created_by:
+        can_close = True
+    else:
+        can_close = False
+
+    winner_name = True
+    if current_active == False:
+        max_bid = max(all_bids)
+        winner = Bid.objects.filter(listing=current_id, bid=max_bid).values('bid_by')
+        for i in winner:
+            winner = i['bid_by']
+        winner_name = User.objects.filter(id=winner)
+        winner_name = winner_name[0]
+
+
     if request.method == "POST":
-        if request.POST.get('bid') != '':
+        
+        if request.POST.get('bid') != None:
             if int(request.POST.get('bid')) > max(all_bids) and int(request.POST.get('bid')) >= current_stbid:
-                b = Bid(listing_id=current_id, bid=request.POST.get('bid'))
+                b = Bid(listing_id=current_id, bid=request.POST.get('bid'), bid_by=request.user)
                 b.save()  
                 return HttpResponseRedirect((f"{ title }"))
             else:
@@ -132,9 +158,15 @@ def listing(request, title):
             c = Watchlist.objects.filter(watchlist=current_id)
             c.delete()
             return HttpResponseRedirect((f"{ title }"))
-        ##determines winner
-         
-          
+
+    if request.POST.get('close') == 'yes':
+            closed = Listing.objects.filter(title=title)
+            closed.update(active=False)
+            return HttpResponseRedirect((f"{ title }"))
+
+
+
+    
 
     return render(request, "auctions/listing.html", {
         "title": current_title,
@@ -142,16 +174,15 @@ def listing(request, title):
         "start_bid": current_stbid,
         "img_url" : current_imgurl,
         "cat": current_cat,
-        "add_watch": add_watch
+        "add_watch": add_watch,
+        "can_close": can_close,
+        "current_active": current_active,
+        "winner_name": winner_name
         })
 
 
 def bidinvalid(request):
         return render(request, "auctions/bidinvalid.html")
-
-
-
-
 
 
 def categories(request):
