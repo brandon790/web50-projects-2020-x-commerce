@@ -125,7 +125,6 @@ def listing(request, title):
         created_by = i['created_by']  
 
     logged_in_id = (request.user.id)
-
     if logged_in_id == created_by:
         can_close = True
     else:
@@ -141,6 +140,7 @@ def listing(request, title):
         winner_name = winner_name[0]
 
 
+
     if request.method == "POST":
         
         if request.POST.get('bid') != None:
@@ -150,6 +150,10 @@ def listing(request, title):
                 return HttpResponseRedirect((f"{ title }"))
             else:
                 return render(request, "auctions/bidinvalid.html")
+        elif request.POST.get('add_comment') != None:
+            c = Comment(listing_id=current_id, comment=request.POST.get('add_comment'))
+            c.save()
+            return HttpResponseRedirect((f"{ title }"))
         elif request.POST.get('addwatch') == 'yes':
             c = Watchlist(user=request.user, watchlist=current_id)
             c.save()
@@ -165,7 +169,16 @@ def listing(request, title):
             return HttpResponseRedirect((f"{ title }"))
 
 
-
+    current_user_wins = False
+    if request.user == winner_name:
+        current_user_wins = True
+    
+    
+    ##gets comments for listing
+    comments = Comment.objects.filter(listing__title=title).values('comment')
+    all_comments = []
+    for i in comments:
+        all_comments.append(i['comment'])
     
 
     return render(request, "auctions/listing.html", {
@@ -177,7 +190,9 @@ def listing(request, title):
         "add_watch": add_watch,
         "can_close": can_close,
         "current_active": current_active,
-        "winner_name": winner_name
+        "winner_name": winner_name,
+        "current_user_wins": current_user_wins,
+        "all_comments": all_comments
         })
 
 

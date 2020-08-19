@@ -1,6 +1,10 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+            {% if current_user_wins == True %}
+            <h1>You won this item!</h1>
+            {% endif %}
+
     <h2>Listing: {{ title }}</h2><br>
         <form action="" method="POST">
             {% csrf_token %}
@@ -46,7 +50,20 @@
         <ul >
             <li>Category: {{ cat }}</li>
         </ul>
-       
+        <br>
+        <br>
+        <form action="" method="POST">
+        {% csrf_token %}
+        {% if user.is_authenticated and current_active == True %}
+        <input type="text" name='add_comment' style="height: 200px; width: 300px;";>
+        <input type="submit"><br><br>
+        </form>
+        {% for comment in all_comments %}
+        <ul>
+            <li>{{ comment }}</li>
+        </ul>
+        {% endfor %}
         {% endif %}
-{% endif %}
+        {% endif %}
+        {% endif %}
 {% endblock %}
