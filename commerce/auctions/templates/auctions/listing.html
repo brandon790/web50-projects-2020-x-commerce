@@ -10,11 +10,11 @@
             {% csrf_token %}
             {% if user.is_authenticated %}
             {% if add_watch == True %}
-            <input type="submit" value='Remove from Watchlist' style="position: relative;left: 20px;"></button>
+            <input type="submit" value='Remove from Watchlist' style="position: relative;background-color:indianred"></button>
             <input type="hidden" name="removewatch" value="yes">
             {% endif %}
             {% if add_watch == False %}
-            <input type="submit" value='Add to Watchlist' style="position: relative;left: 20px;"></button>
+            <input type="submit" value='Add to Watchlist' style="position: relative;background-color: cadetblue;"></button>
             <input type="hidden" name="addwatch" value="yes">
             {% endif %}
         </form>
@@ -22,7 +22,7 @@
         <br>
         <img src="{{ img_url}}" style="position:relative;left:10px;width:250px;height:250px;"><br><br>
         <div>{{ description }}</div><br>
-        <h1>Starting Bid: ${{ start_bid }}</h1><br>
+        <h3>Starting Bid: ${{ start_bid }}</h3><br>
         <form action="" method="POST">
             {% csrf_token %}
             {% if user.is_authenticated and current_active == True %}
@@ -36,7 +36,7 @@
             {% csrf_token %}
             {% if user.is_authenticated %}
         {% if can_close == True and current_active == True %}
-        <input type="submit" value='Close Listing'></button>
+        <input type="submit" value='Close Listing' style="position: absolute; top: 175px; left: 475px;"></button>
         <input type="hidden" name="close" value="yes">
         {% endif %}
         <br>
@@ -54,7 +54,8 @@
         <br>
         <form action="" method="POST">
         {% csrf_token %}
-        {% if user.is_authenticated and current_active == True %}
+        {% if user.is_authenticated  %}
+        <h3>Comments</h3>
         <input type="text" name='add_comment' style="height: 200px; width: 300px;";>
         <input type="submit"><br><br>
         </form>
